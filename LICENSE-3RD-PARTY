@@ -1,3 +1,24 @@
+The fonts in dist/fonts/ are all licensed under the SIL Open Font
+License, Version 1.1. Their copyright notices come first; the license
+text, which applies to each of them, is copied once below.
+
+Inter — InterVariable.woff2, InterVariable-Italic.woff2
+Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+
+Karla — Karla.woff2, Karla-Italic.woff2
+Version 2.004 from Google Fonts, converted to WOFF2 with no other change.
+Copyright 2019 The Karla Project Authors (https://github.com/googlefonts/karla)
+
+IBM Plex Sans Arabic — IBMPlexSansArabic-Regular.woff2, IBMPlexSansArabic-Bold.woff2
+IBM's own WOFF2 files from the npm package @ibm/plex-sans-arabic 1.1.0,
+unmodified.
+Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+
+Levanta Arrows — LevantaArrows-Regular.*, LevantaArrows-Bold.*
+A Modified Version of Karla and Inter, built by tools/build-arrows.py:
+Karla's hyphen, less-than, equals and greater-than signs, Inter's arrow
+glyphs, and new arrow ligatures. Released under the same license.
+Copyright 2019 The Karla Project Authors (https://github.com/googlefonts/karla)
 Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.

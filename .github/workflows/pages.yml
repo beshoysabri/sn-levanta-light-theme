@@ -36,8 +36,13 @@ jobs:
             exit 1
           fi
 
-          test -f dist/fonts/InterVariable.woff2        || { echo "::error::missing roman woff2"; exit 1; }
-          test -f dist/fonts/InterVariable-Italic.woff2 || { echo "::error::missing italic woff2"; exit 1; }
+          for f in InterVariable.woff2 InterVariable-Italic.woff2 \
+                   Karla.woff2 Karla-Italic.woff2 \
+                   IBMPlexSansArabic-Regular.woff2 IBMPlexSansArabic-Bold.woff2 \
+                   LevantaArrows-Regular.woff2 LevantaArrows-Bold.woff2 \
+                   LevantaArrows-Regular.ttf LevantaArrows-Bold.ttf; do
+            test -s "dist/fonts/$f" || { echo "::error::missing dist/fonts/$f"; exit 1; }
+          done
 
           python3 - <<'PY'
           import re, sys, hashlib
@@ -52,9 +57,12 @@ jobs:
 
           # Standard Notes inlines theme CSS rather than linking it, so a
           # relative @font-face src resolves against the app's own origin and
-          # 404s. v2.2.0 shipped that bug. Both srcs must be absolute.
-          BASE = 'https://beshoysabri.github.io/sn-lavender-light-theme/dist/fonts'
-          for face in ('InterVariable.woff2', 'InterVariable-Italic.woff2'):
+          # 404s. v2.2.0 shipped that bug. Every src must be absolute.
+          BASE = 'https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts'
+          for face in ('InterVariable.woff2', 'InterVariable-Italic.woff2',
+                       'Karla.woff2', 'Karla-Italic.woff2',
+                       'IBMPlexSansArabic-Regular.woff2', 'IBMPlexSansArabic-Bold.woff2',
+                       'LevantaArrows-Regular.woff2', 'LevantaArrows-Bold.woff2'):
               if f"url('{BASE}/{face}')" not in stripped:
                   fail(f'@font-face src for {face} is not the absolute Pages URL')
 
@@ -62,13 +70,14 @@ jobs:
           # (white base and #6d61d1 accent since v2.7.0). Digesting only
           # the --sn-stylekit-* names covered 51 of 93 custom properties and left
           # 39 real colours unguarded — navigation, items column, editor,
-          # titlebar, text selection, popover. The 3 --sn-inter-* typography
-          # knobs are the only custom properties deliberately excluded.
-          # Changing a colour on purpose means updating EXPECTED in the same
-          # commit; a failed run prints the new digest.
+          # titlebar, text selection, popover. The 3 --sn-inter-* and the 2
+          # --levanta-* typography knobs are the only custom properties
+          # deliberately excluded. Changing a colour on purpose means
+          # updating EXPECTED in the same commit; a failed run prints the
+          # new digest.
           decls = [(k, ' '.join(v.split()))
                    for k, v in re.findall(r'(--[\w-]+)\s*:\s*([^;]+);', stripped)
-                   if not k.startswith('--sn-inter-')]
+                   if not k.startswith(('--sn-inter-', '--levanta-'))]
           if len(decls) != 90:
               fail(f'expected 90 colour declarations, found {len(decls)}')
           digest = hashlib.sha256('\n'.join(f'{k}={v}' for k, v in decls).encode()).hexdigest()
@@ -83,14 +92,24 @@ jobs:
           if not re.search(r'html\s*,\s*body\s*,\s*body\s*\*', stripped):
               fail('the app-wide selector (html, body, body *) is missing')
 
-          # Note: the Daily view and selection rules (sections 4 and 5) must
+          # The same for the writing area: Karla and Plex must reach Super
+          # and the plain-text editor, and code inside them must stay mono.
+          if 'font-family: var(--levanta-text-font) !important' not in stripped:
+              fail('nothing applies --levanta-text-font — the editor rule is gone')
+          for sel in ('#super-editor-content *', '.ContentEditable__root *', '#note-text-editor'):
+              if sel not in stripped:
+                  fail(f'the editor rule no longer covers {sel}')
+          if ':is(#super-editor-content, .ContentEditable__root) :is(pre, code' not in stripped:
+              fail('code inside the editor is no longer kept monospace')
+
+          # Note: the Daily view and selection rules (sections 5 and 6) must
           # reference variables rather than declare new ones. No separate check
           # is needed — a declaration would push the count to 91 and break the
           # digest above.
 
-          # The section 6 opt-ins must stay commented out.
+          # The section 7 opt-ins must stay commented out.
           if 'font-family: revert' in stripped:
-              fail('the "confine Inter to the editor" opt-in block is uncommented')
+              fail('the "system font outside the editor" opt-in block is uncommented')
 
           # Count braces on the stripped source; counting the raw file also
           # counts braces inside the commented-out blocks and hides a real
@@ -98,7 +117,7 @@ jobs:
           if stripped.count('{') != stripped.count('}'):
               fail('unbalanced braces in dist.css')
 
-          print(f'dist.css ok — {len(decls)} colours unchanged, Inter applied, absolute srcs, braces balanced')
+          print(f'dist.css ok — {len(decls)} colours unchanged, Inter and the writing fonts applied, absolute srcs, braces balanced')
           PY
 
           echo "ok — publishing v$EXT"

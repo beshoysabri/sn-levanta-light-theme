@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Publish sn-lavender-light-theme to GitHub Pages.
+# Publish sn-levanta-light-theme to GitHub Pages.
 #
 # Run from inside your local clone, after copying the new files over.
 # One-time setup first: Settings > Pages > Source > "GitHub Actions".
@@ -11,9 +11,9 @@
 #
 set -euo pipefail
 
-REPO_SLUG="beshoysabri/sn-lavender-light-theme"
+REPO_SLUG="beshoysabri/sn-levanta-light-theme"
 BRANCH="master"       # this repo's default branch is master, not main
-PAGES="https://beshoysabri.github.io/sn-lavender-light-theme"
+PAGES="https://beshoysabri.github.io/sn-levanta-light-theme"
 MSG_FILE="${MSG_FILE:-RELEASE_NOTES.md}"
 
 # Derived from the manifest — one less place to forget to bump.
@@ -30,14 +30,20 @@ EXT=$(python3 -c "import json;print(json.load(open('ext.json'))['version'])")
 PKG=$(python3 -c "import json;print(json.load(open('package.json'))['version'])")
 [ "$EXT" = "$PKG" ] || { echo "version drift: ext.json=$EXT package.json=$PKG"; exit 1; }
 [ "$EXT" = "$VERSION" ] || { echo "expected v$VERSION, manifests say v$EXT"; exit 1; }
-test -f dist/fonts/InterVariable.woff2
-test -f dist/fonts/InterVariable-Italic.woff2
+WOFF2="InterVariable.woff2 InterVariable-Italic.woff2 Karla.woff2 Karla-Italic.woff2
+       IBMPlexSansArabic-Regular.woff2 IBMPlexSansArabic-Bold.woff2
+       LevantaArrows-Regular.woff2 LevantaArrows-Bold.woff2"
+INSTALL="LevantaArrows-Regular.ttf LevantaArrows-Bold.ttf"
 PAGES_FONTS="${PAGES}/dist/fonts"
-grep -q "url('${PAGES_FONTS}/InterVariable.woff2')" dist/dist.css
-grep -q "url('${PAGES_FONTS}/InterVariable-Italic.woff2')" dist/dist.css
+for f in $WOFF2; do
+  test -s "dist/fonts/$f" || { echo "missing dist/fonts/$f"; exit 1; }
+  grep -q "url('${PAGES_FONTS}/$f')" dist/dist.css || { echo "$f has no absolute src in dist.css"; exit 1; }
+done
+for f in $INSTALL; do test -s "dist/fonts/$f" || { echo "missing dist/fonts/$f"; exit 1; }; done
+grep -q -- "font-family: var(--levanta-text-font) !important" dist/dist.css
 grep -q -- "--sn-stylekit-info-color: #6d61d1;" dist/dist.css
 test -f .nojekyll
-echo "    v$EXT, fonts present, absolute srcs, accent intact"
+echo "    v$EXT, fonts present, absolute srcs, editor fonts applied, accent intact"
 
 say "Committing"
 test -f "$MSG_FILE" || { echo "no $MSG_FILE — write this release's notes first"; exit 1; }
@@ -76,13 +82,13 @@ done
 
 say "Verifying what Pages actually serves"
 BAD=0
-for path in ext.json dist/dist.css dist/fonts/InterVariable.woff2 dist/fonts/InterVariable-Italic.woff2; do
+for path in ext.json dist/dist.css $(for f in $WOFF2 $INSTALL; do printf "dist/fonts/%s " "$f"; done); do
   read -r code ctype < <(curl -sS -o /dev/null -w '%{http_code} %{content_type}\n' "${PAGES}/${path}")
   # Native Windows curl ends the write-out with \r\n and read keeps the \r,
   # so a healthy font/woff2 failed the comparison below and the deploy
   # reported broken assets on Windows.
   ctype=${ctype%$'\r'}
-  printf '    %-40s %s  %s\n' "$path" "$code" "$ctype"
+  printf '    %-46s %s  %s\n' "$path" "$code" "$ctype"
   [ "$code" = "200" ] || BAD=1
   case "$path" in
     *.woff2) [ "${ctype%%;*}" = "font/woff2" ] || BAD=1 ;;
@@ -93,7 +99,7 @@ done
 
 say "Checking CORS on the font (a webfont needs this cross-origin)"
 curl -fsSI -H 'Origin: https://app.standardnotes.com' \
-  "${PAGES}/dist/fonts/InterVariable.woff2" \
+  "${PAGES}/dist/fonts/Karla.woff2" \
   | grep -i 'access-control-allow-origin' \
   || echo "    WARNING: no ACAO header — confirm the repo is public"
 
@@ -117,11 +123,16 @@ cat <<EOF
 
 Done. ${PAGES}
 
-In Standard Notes, install Lavender Light from:
+In Standard Notes, install Levanta Light from:
   ${PAGES}/ext.json
 
-It has its own identifier, so it sits alongside Lavender and Dark Blue
+It has its own identifier, so it sits alongside Levanta Dark, Lavender and Lavender Light
 rather than replacing them — pick any of them from the Appearance menu.
-Pair it with Lavender under Preferences > Appearance > "Use system color
-scheme" to switch with the OS.
+Pair it with Levanta Dark under Preferences > Appearance > "Use system
+color scheme" to switch with the OS.
+
+Desktop and mobile need the fonts installed on the device — Inter,
+Karla, IBM Plex Sans Arabic and Levanta Arrows (see the README):
+  ${PAGES}/dist/fonts/LevantaArrows-Regular.ttf
+  ${PAGES}/dist/fonts/LevantaArrows-Bold.ttf
 EOF

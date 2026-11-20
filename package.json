@@ -1,12 +1,12 @@
 {
-  "name": "sn-lavender-light-theme",
-  "version": "2.7.0",
+  "name": "sn-levanta-light-theme",
+  "version": "2.8.0",
   "main": "dist/dist.css",
   "sn": {
     "main": "dist/dist.css"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/beshoysabri/sn-lavender-light-theme.git"
+    "url": "git://github.com/beshoysabri/sn-levanta-light-theme.git"
   }
 }

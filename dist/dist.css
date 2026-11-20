@@ -1,39 +1,45 @@
 /*
- * Standard Notes Theme: Lavender Light
- * A light theme with a lavender accent, plus Inter across the
- * whole app. The light counterpart of Lavender
- *   https://github.com/beshoysabri/sn-lavender-theme
- * which is itself a fork of Dark Blue
- *   https://github.com/beshoysabri/sn-dark-blue-theme
+ * Standard Notes Theme: Levanta Light
+ * Lavender Light's white theme with a lavender accent, with the
+ * note you write in set in Karla for English and IBM Plex Sans
+ * Arabic for Arabic, and typed arrows (->, =>, <->) drawn as real
+ * arrows in both. The rest of the app stays in Inter. The light
+ * counterpart of Levanta Dark
+ *   https://github.com/beshoysabri/sn-levanta-dark-theme
+ * and a fork of Lavender Light
+ *   https://github.com/beshoysabri/sn-lavender-light-theme
  *
  * Author : Beshoy Sabri
- * License: MIT. Inter is OFL 1.1 — see
- *   https://beshoysabri.github.io/sn-lavender-light-theme/LICENSE-3RD-PARTY
- * Version: 2.7.0
+ * License: MIT. Inter, Karla, IBM Plex Sans Arabic and Levanta
+ *   Arrows are OFL 1.1 — see
+ *   https://beshoysabri.github.io/sn-levanta-light-theme/LICENSE-3RD-PARTY
+ * Version: 2.8.0
  *
  * FONTS — READ THIS. The desktop client sets
  *   Content-Security-Policy: default-src 'self' blob:
  * with no font-src, so it refuses every remote and data: webfont.
- * The @font-face below therefore only downloads in the web app.
- * Everywhere else the stack falls through to a copy of Inter
- * installed on the device, which needs no download and so has
+ * The @font-face rules below therefore only download in the web
+ * app. Everywhere else each stack falls through to copies
+ * installed on the device, which need no download and so have
  * nothing to block:
  *
  *   Web      — downloads automatically, nothing to do
- *   Desktop  — install Inter (https://rsms.me/inter/), then relaunch
- *   Mobile   — install Inter on the device; confirmed working on
- *              both iOS and Android
+ *   Desktop  — install Inter, Karla, IBM Plex Sans Arabic and
+ *              Levanta Arrows (see the README), then relaunch
+ *   Mobile   — install the same fonts on the device; Inter is
+ *              confirmed working on both iOS and Android
  *
- * Without a local copy you get the colours and the system font,
+ * Without local copies you get the colours and the system fonts,
  * which is a correct fallback rather than a failure.
  *
  * Structure:
  *   1. Typography — Inter webfont + knobs
  *   2. Colours    — white base, deep lavender accent (new in 2.7.0)
  *   3. Apply Inter app-wide                        (changed in 2.3.0)
- *   4. Daily view — lavender instead of danger red (new in 2.4.0)
- *   5. Selection — lavender wash, sidebar and list (new in 2.6.0)
- *   6. Optional extras — commented out
+ *   4. Writing area — Karla, Plex Arabic, arrows   (new in 2.8.0)
+ *   5. Daily view — lavender instead of danger red (new in 2.4.0)
+ *   6. Selection — lavender wash, sidebar and list (new in 2.6.0)
+ *   7. Optional extras — commented out
  */
 
 /* ==============================================================
@@ -57,7 +63,7 @@
   src:
     local('InterVariable'),
     local('Inter Variable'),
-    url('https://beshoysabri.github.io/sn-lavender-light-theme/dist/fonts/InterVariable.woff2')
+    url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/InterVariable.woff2')
       format('woff2');
 }
 
@@ -69,7 +75,7 @@
   src:
     local('InterVariableItalic'),
     local('Inter Variable Italic'),
-    url('https://beshoysabri.github.io/sn-lavender-light-theme/dist/fonts/InterVariable-Italic.woff2')
+    url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/InterVariable-Italic.woff2')
       format('woff2');
 }
 
@@ -122,7 +128,7 @@
      lightness that holds up on white. The darkened shade drops HSL
      lightness by the same 6.9 points as Dark Blue's #086DD6 →
      #065cb5, and doubles as the colour for accent text on the
-     wash (sections 4 and 5): there #6d61d1 manages only 3.6–3.9:1,
+     wash (sections 5 and 6): there #6d61d1 manages only 3.6–3.9:1,
      the darkened shade 5.0–5.4:1. Text on the accent is white
      again, 4.9:1, as in native Light. */
   --sn-stylekit-info-color: #6d61d1;
@@ -185,7 +191,7 @@
   --sn-stylekit-passive-color-3: #e0e0e0;
   --sn-stylekit-passive-color-4: #f5f5f5;
   --sn-stylekit-passive-color-4-opacity-variant: #bbbec43d;
-  --sn-stylekit-passive-color-5: #f2f2f2; /* note-list hover, section 5 */
+  --sn-stylekit-passive-color-5: #f2f2f2; /* note-list hover, section 6 */
   --sn-stylekit-passive-color-6: #e5e5e5;
   --sn-stylekit-passive-color-super-light: #f9f9f9;
 
@@ -223,7 +229,7 @@
   --sn-stylekit-menu-border: 1px solid #c9c9c9;
 
   /* Navigation. selected-background is also Standard Notes' HOVER
-     colour, so it is a neutral grey here; section 5 tints the
+     colour, so it is a neutral grey here; section 6 tints the
      selected row with the accent instead. */
   --navigation-column-background-color: #f5f5f5;
   --navigation-section-title-color: #2a2a2a;
@@ -308,7 +314,177 @@ code *,
 }
 
 /* ==============================================================
- * 4. DAILY VIEW — lavender instead of danger red
+ * 4. WRITING AREA — Karla, IBM Plex Sans Arabic, arrows
+ *    (new in 2.8.0)
+ * The body of the note you are writing, Super and plain text
+ * alike, is set in Karla, with Arabic in IBM Plex Sans Arabic. The
+ * note title, sidebar, note list and menus stay in Inter
+ * (section 3).
+ *
+ * Nothing here has to detect Arabic. A browser picks a font per
+ * character, walking the stack until one has the glyph: Karla has
+ * no Arabic, so Arabic letters fall through to Plex. The Plex
+ * faces are also limited to the Arabic blocks with unicode-range,
+ * so Plex's own Latin letters never stand in for Karla's, and a
+ * note with no Arabic never downloads them. Direction is the
+ * editor's job and already works: Super gives each paragraph
+ * dir="auto" and the plain-text editor is a dir="auto" textarea,
+ * so a paragraph that starts in Arabic runs right to left and
+ * aligns right.
+ *
+ * ARROWS. Karla has no arrow ligatures, and Inter's stop working
+ * in Arabic: in a right-to-left run `>` is mirrored to `<` before
+ * ligatures are looked up, so Inter's `->` rule never matches.
+ * Levanta Arrows covers both. It holds Karla's own - < = > and
+ * Inter's arrows at Karla's weight, with rules for both
+ * directions:
+ *   ->  <-  <->  =>  <=>  -->  <--  <-->  ==>  <==  <==>  --->  <---
+ * In an Arabic paragraph `->` points the way the text reads (←),
+ * the way brackets flip. <= and >= stay "less/greater than or
+ * equal". It sits first in the stack with a unicode-range of just
+ * those characters, so it touches nothing else, and
+ * tools/build-arrows.py rebuilds it.
+ *
+ * Karla and Plex have no local() sources: an installed static
+ * "Karla Regular" would match local('Karla Regular') and then serve
+ * bold text too, unbolded, since synthetic bold is off. Installed
+ * copies are found by family name further down the stack instead.
+ * Levanta Arrows ships as static Regular and Bold with names of its
+ * own, so local() finds exactly the right face.
+ * ============================================================== */
+
+@font-face {
+  font-family: 'Levanta Arrows';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local('Levanta Arrows Regular'),
+    local('LevantaArrows-Regular'),
+    url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/LevantaArrows-Regular.woff2')
+      format('woff2');
+  unicode-range: U+2D, U+3C-3E, U+2190, U+2192, U+2194, U+21D0, U+21D2, U+21D4,
+    U+27F5-27FA, U+1F850, U+1F852;
+}
+
+@font-face {
+  font-family: 'Levanta Arrows';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src:
+    local('Levanta Arrows Bold'),
+    local('LevantaArrows-Bold'),
+    url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/LevantaArrows-Bold.woff2')
+      format('woff2');
+  unicode-range: U+2D, U+3C-3E, U+2190, U+2192, U+2194, U+21D0, U+21D2, U+21D4,
+    U+27F5-27FA, U+1F850, U+1F852;
+}
+
+/* Karla v2.004 by Jonny Pinhorn, SIL OFL 1.1 — the variable font,
+   roman and italic, 200 to 800. */
+@font-face {
+  font-family: 'Levanta Karla';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/Karla.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: 'Levanta Karla';
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/Karla-Italic.woff2')
+    format('woff2');
+}
+
+/* IBM Plex Sans Arabic by Mike Abbink, Bold Monday, Khajag Apelian
+   and Wael Morcos, SIL OFL 1.1 — IBM's own woff2 files, unmodified.
+   Super uses two weights: 400, and 700 for bold and headings.
+   Arabic has no italic; italic Arabic is slanted by the browser. */
+@font-face {
+  font-family: 'Levanta Plex Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/IBMPlexSansArabic-Regular.woff2')
+    format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF,
+    U+200C-200F;
+}
+
+@font-face {
+  font-family: 'Levanta Plex Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/IBMPlexSansArabic-Bold.woff2')
+    format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF,
+    U+200C-200F;
+}
+
+:root {
+  /* Order matters. Levanta Arrows first, for - < = > and the
+     arrows only. Then Karla: the webfont, then an installed copy.
+     Then Plex for Arabic. Inter comes before an installed Plex
+     because installed Plex carries Latin letters too, and Latin
+     should fall back to Inter when Karla is missing. Last, the
+     system Arabic faces, as in section 1. */
+  --levanta-text-font:
+    'Levanta Arrows',
+    'Levanta Karla', 'Karla',
+    'Levanta Plex Arabic',
+    'InterVariable', 'Inter Variable', 'Inter',
+    'IBM Plex Sans Arabic',
+    'Noto Naskh Arabic', 'Segoe UI', 'Noto Sans Arabic',
+    -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+
+  /* The arrows are contextual alternates. Change `contextual` to
+     `no-contextual` to keep -> as typed in the editor. */
+  --levanta-text-ligatures: common-ligatures contextual;
+}
+
+/* Super's content (#super-editor-content, class
+   ContentEditable__root) and the plain-text editor. More specific
+   than section 3's `body *`, so the editor wins and nothing else
+   moves. Section 3's feature settings are Inter's own (cv05), so
+   the editor resets them. */
+#super-editor-content,
+#super-editor-content *,
+.ContentEditable__root,
+.ContentEditable__root *,
+#note-text-editor {
+  font-family: var(--levanta-text-font) !important;
+  font-feature-settings: normal;
+  font-variant-ligatures: var(--levanta-text-ligatures);
+}
+
+/* Code keeps a monospace face inside the editor too. Section 3's
+   code rule is less specific than the rule above, so it is
+   repeated here, scoped to the editor. */
+:is(#super-editor-content, .ContentEditable__root) :is(pre, code, kbd, samp, [data-lexical-code]),
+:is(#super-editor-content, .ContentEditable__root) :is(pre, code, kbd, samp, [data-lexical-code]) * {
+  font-family: var(--sn-inter-mono) !important;
+  font-feature-settings: normal;
+  font-variant-ligatures: none;
+}
+
+/* Standard Notes' "Monospace font" option puts .monospace-font on
+   <html>. Under section 3 alone Inter overrode it; here the editor
+   honours it. */
+:root.monospace-font :is(#super-editor-content, .ContentEditable__root),
+:root.monospace-font :is(#super-editor-content, .ContentEditable__root) *,
+:root.monospace-font #note-text-editor {
+  font-family: var(--sn-inter-mono) !important;
+  font-variant-ligatures: none;
+}
+
+/* ==============================================================
+ * 5. DAILY VIEW — lavender instead of danger red
  * The Daily notebook borrows Standard Notes' `danger` token for
  * today's date, days that have an entry, the entry tiles and the
  * create-note buttons, so they come out #cc2128 against an
@@ -362,7 +538,7 @@ button.z-editor-title-bar.bg-danger {
 }
 
 /* ==============================================================
- * 5. SELECTION — a lavender wash, not a grey bar
+ * 6. SELECTION — a lavender wash, not a grey bar
  * Standard Notes uses ONE colour for both hover and selection, in
  * both places it matters:
  *   sidebar   — --navigation-item-selected-background-color
@@ -374,7 +550,7 @@ button.z-editor-title-bar.bg-danger {
  * selection, so hover stays grey and these rules give the selected
  * row the accent backdrop — and, in the sidebar, an accent label.
  * They only REFERENCE variables, so the colour digest is untouched.
- * Like section 4, they match Standard Notes' own class names.
+ * Like section 5, they match Standard Notes' own class names.
  * ============================================================== */
 
 #navigation .tag.selected {
@@ -406,10 +582,11 @@ button.z-editor-title-bar.bg-danger {
 }
 
 /* ==============================================================
- * 6. OPTIONAL — uncomment what you want
+ * 7. OPTIONAL — uncomment what you want
  * ============================================================== */
 
 /* Inter runs a touch wide at heading sizes; tighten the tracking.
+   This reaches headings inside Super notes (Karla) too.
 :is(h1, h2, h3, h4, h5, h6) {
   letter-spacing: -0.018em;
 }
@@ -422,30 +599,41 @@ button.z-editor-title-bar.bg-danger {
 }
 */
 
-/* Lining, equal-width figures inside Super tables.
-:is(#blocks-editor, [data-lexical-editor='true']) table {
-  font-feature-settings: 'tnum' 1, 'cv05' 1;
+/* Lining, equal-width figures inside Super tables. Every element in
+   the editor sets its own feature settings (section 4), so the
+   rule has to reach the cells' contents, not just the table.
+:is(#super-editor-content, .ContentEditable__root) :is(table, table *) {
+  font-feature-settings: 'tnum' 1;
 }
 */
 
-/* Turn the -> arrow substitution back off. Inter's contextual
-   alternates fuse -> into a single glyph, which can make the caret
-   feel off by one when you arrow across it in an editor.
+/* Keep -> as typed everywhere, in the editor and in Inter elsewhere.
+   A fused arrow can make the caret feel off by one when you arrow
+   across it. font-feature-settings outranks font-variant-ligatures,
+   so Inter's 'calt' has to leave --sn-inter-features as well. For
+   the editor alone, set only --levanta-text-ligatures.
+:root {
+  --sn-inter-features: 'cv05' 1;
+  --levanta-text-ligatures: common-ligatures no-contextual;
+}
 html, body, body * {
-  font-variant-ligatures: none;
+  font-variant-ligatures: common-ligatures no-contextual;
 }
 */
 
-/* Confine Inter to the note editor again, as v2.2.0 did, leaving
-   the sidebar and menus on the system font — replaces section 3.
+/* Set the note title in the writing fonts too, so an Arabic title
+   gets Plex rather than the system's Arabic face.
+#note-title-editor {
+  font-family: var(--levanta-text-font) !important;
+  font-feature-settings: normal;
+  font-variant-ligatures: var(--levanta-text-ligatures);
+}
+*/
+
+/* Put the sidebar, note list and menus back on the system font,
+   keeping Karla and Plex in the editor — replaces section 3.
+   Section 4 is more specific, so the editor keeps its fonts.
 html, body, body * {
   font-family: revert !important;
-}
-#blocks-editor,
-#super-editor,
-.ContentEditable__root,
-[data-lexical-editor='true'],
-:is(#blocks-editor, #super-editor, .ContentEditable__root, [data-lexical-editor='true']) * {
-  font-family: var(--sn-inter-font) !important;
 }
 */
