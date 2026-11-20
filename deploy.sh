@@ -33,7 +33,7 @@ PKG=$(python3 -c "import json;print(json.load(open('package.json'))['version'])"
 WOFF2="InterVariable.woff2 InterVariable-Italic.woff2 Karla.woff2 Karla-Italic.woff2
        IBMPlexSansArabic-Regular.woff2 IBMPlexSansArabic-Bold.woff2
        LevantaArrows-Regular.woff2 LevantaArrows-Bold.woff2"
-INSTALL="LevantaArrows-Regular.ttf LevantaArrows-Bold.ttf"
+INSTALL="LevantaArrows-Regular.ttf LevantaArrows-Bold.ttf levanta-fonts.zip"
 PAGES_FONTS="${PAGES}/dist/fonts"
 for f in $WOFF2; do
   test -s "dist/fonts/$f" || { echo "missing dist/fonts/$f"; exit 1; }
@@ -131,8 +131,7 @@ rather than replacing them — pick any of them from the Appearance menu.
 Pair it with Levanta Dark under Preferences > Appearance > "Use system
 color scheme" to switch with the OS.
 
-Desktop and mobile need the fonts installed on the device — Inter,
-Karla, IBM Plex Sans Arabic and Levanta Arrows (see the README):
-  ${PAGES}/dist/fonts/LevantaArrows-Regular.ttf
-  ${PAGES}/dist/fonts/LevantaArrows-Bold.ttf
+The desktop app needs the fonts installed — one zip with Inter, Karla,
+IBM Plex Sans Arabic and Levanta Arrows (see the README):
+  ${PAGES}/dist/fonts/levanta-fonts.zip
 EOF

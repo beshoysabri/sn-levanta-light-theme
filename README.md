@@ -38,29 +38,22 @@ Standard Notes then switches between the two with your OS. The choice is stored 
 | Client | Colours | Inter (the app) | Karla, Plex Arabic, arrows (the editor) |
 |---|---|---|---|
 | Web | yes | downloaded automatically | downloaded automatically |
-| Desktop | yes | install on the machine — see below | install on the machine — see below |
-| Mobile | yes | install on the device — works on iOS and Android | install on the device |
+| iPhone, Android | yes | downloaded automatically | downloaded automatically |
+| Desktop (Windows, macOS, Linux) | yes | install on the computer — see below | install on the computer — see below |
 
-### Everywhere except the web app, install the fonts on the device
+### The desktop app needs the fonts installed
 
-The desktop app sends `Content-Security-Policy: default-src 'self' blob:` with no `font-src`, so it refuses to download **any** webfont — from this repo, from a CDN, or inlined as a `data:` URI. No theme can ship a font file into it.
+The desktop app sends `Content-Security-Policy: default-src 'self' blob:` with no `font-src`, so it refuses to download **any** webfont — from this repo, from a CDN, or inlined as a `data:` URI. Its own page is a local file, so `'self'` only covers files on disk, and a theme has no path to its fonts there that works on every computer. No theme can ship a font file into it. The phone apps have no such policy and download the fonts as the web app does (checked on iPhone and Android).
 
-What does work is a font already installed on the device. There's no download, so CSP has nothing to block — it's just a family-name lookup, and the stacks are written so installed copies are found automatically. The same trick works on mobile.
+What does work is a font installed on the computer. There's no download, so CSP has nothing to block — it's a name lookup, and the stacks are written so installed copies are found automatically. Without them the desktop app shows the colours on the system font, and `->` stays as typed.
 
-**Desktop** — install these, then fully quit Standard Notes and reopen it; the system font list is read at launch.
+**Install the font pack**, one zip with all eight files and their licenses: [`levanta-fonts.zip`](https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/levanta-fonts.zip) (1.3 MB) — Inter, Karla, IBM Plex Sans Arabic and Levanta Arrows.
 
-| Font | Get it from | Install |
-|---|---|---|
-| Inter | [rsms.me/inter](https://rsms.me/inter/) | `InterVariable.ttf` and `InterVariable-Italic.ttf`, inside `Desktop/` in the zip |
-| Karla | [Google Fonts](https://fonts.google.com/specimen/Karla) → Get font → Download all | the two variable files, roman and italic |
-| IBM Plex Sans Arabic | [Google Fonts](https://fonts.google.com/specimen/IBM+Plex+Sans+Arabic) → Get font → Download all | at least Regular and Bold |
-| Levanta Arrows | this repo | [`LevantaArrows-Regular.ttf`](https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/LevantaArrows-Regular.ttf) and [`LevantaArrows-Bold.ttf`](https://beshoysabri.github.io/sn-levanta-light-theme/dist/fonts/LevantaArrows-Bold.ttf) |
+- **Windows** — extract the zip, select all the `.ttf` files, right-click → **Install for all users**. Plain **Install** puts the fonts in your user profile only, and it isn't certain the desktop app looks there; "for all users" always works. Then quit Standard Notes completely, including from the icon in the system tray, and open it again: fonts are read at launch.
+- **macOS** — double-click each `.ttf` → **Install** (or drag them into Font Book), then quit Standard Notes with Cmd+Q and reopen it.
+- **Linux** — copy the `.ttf` files to `~/.local/share/fonts`, run `fc-cache -f`, and restart Standard Notes.
 
-Font Book on macOS, right-click → Install on Windows. Install bold faces too: the theme turns off synthetic bold, so a family with only a Regular shows bold text unbolded.
-
-**Mobile** — install the same fonts as system fonts (iOS needs a font-installer app that adds a configuration profile; Android varies by manufacturer), then restart Standard Notes. Inter this way is confirmed working on both iOS and Android; the editor fonts use the same family-name lookup, but haven't been tried on a phone yet.
-
-Each font is optional. Without Karla the editor falls back to Inter, without Plex Arabic uses the system's Arabic face, and without Levanta Arrows `->` stays as typed. Skip them all and the theme still works — you get the colours on the system font. That's a correct fallback, not a failure.
+Install the bold faces too: the theme turns off synthetic bold, so a family with only a Regular shows bold text unbolded. Each font is optional — without Karla the editor falls back to Inter, without Plex Arabic it uses the system's Arabic face, and without Levanta Arrows `->` stays as typed.
 
 <details>
 <summary>Alternative: jsDelivr</summary>

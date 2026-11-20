@@ -18,19 +18,20 @@
  * FONTS — READ THIS. The desktop client sets
  *   Content-Security-Policy: default-src 'self' blob:
  * with no font-src, so it refuses every remote and data: webfont.
- * The @font-face rules below therefore only download in the web
- * app. Everywhere else each stack falls through to copies
- * installed on the device, which need no download and so have
+ * The @font-face rules below therefore download in the web and
+ * phone apps only. On desktop each stack falls through to copies
+ * installed on the computer, which need no download and so have
  * nothing to block:
  *
  *   Web      — downloads automatically, nothing to do
- *   Desktop  — install Inter, Karla, IBM Plex Sans Arabic and
- *              Levanta Arrows (see the README), then relaunch
- *   Mobile   — install the same fonts on the device; Inter is
- *              confirmed working on both iOS and Android
+ *   Mobile   — downloads automatically too (checked on iPhone
+ *              and Android)
+ *   Desktop  — install the font pack, dist/fonts/levanta-fonts.zip
+ *              (Inter, Karla, IBM Plex Sans Arabic, Levanta
+ *              Arrows; see the README), then relaunch
  *
- * Without local copies you get the colours and the system fonts,
- * which is a correct fallback rather than a failure.
+ * Without them the desktop app shows the colours on the system
+ * font and -> stays as typed: a fallback, not a failure.
  *
  * Structure:
  *   1. Typography — Inter webfont + knobs

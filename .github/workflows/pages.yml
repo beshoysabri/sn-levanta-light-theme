@@ -40,7 +40,7 @@ jobs:
                    Karla.woff2 Karla-Italic.woff2 \
                    IBMPlexSansArabic-Regular.woff2 IBMPlexSansArabic-Bold.woff2 \
                    LevantaArrows-Regular.woff2 LevantaArrows-Bold.woff2 \
-                   LevantaArrows-Regular.ttf LevantaArrows-Bold.ttf; do
+                   LevantaArrows-Regular.ttf LevantaArrows-Bold.ttf levanta-fonts.zip; do
             test -s "dist/fonts/$f" || { echo "::error::missing dist/fonts/$f"; exit 1; }
           done
 
