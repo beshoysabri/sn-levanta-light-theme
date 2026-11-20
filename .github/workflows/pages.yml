@@ -89,8 +89,13 @@ jobs:
           # a different hat: CI stayed green while nothing actually rendered.
           if 'font-family: var(--sn-inter-font) !important' not in stripped:
               fail('nothing applies --sn-inter-font — the app-wide rule is gone')
-          if not re.search(r'html\s*,\s*body\s*,\s*body\s*\*', stripped):
-              fail('the app-wide selector (html, body, body *) is missing')
+          # Scoped to Standard Notes' own page: SN loads the theme into every
+          # editor plugin's frame too, and a bare body * rule replaced the
+          # plugins' own fonts with Inter (fixed in 2.8.1).
+          if ':where(body:has(> #app-group-root)) *' not in stripped:
+              fail('the app-wide rule is no longer scoped to #app-group-root')
+          if re.search(r'\bbody\s+\*', stripped):
+              fail('a rule targets bare body *, which reaches into every editor plugin')
 
           # The same for the writing area: Karla and Plex must reach Super
           # and the plain-text editor, and code inside them must stay mono.
@@ -108,7 +113,7 @@ jobs:
           # digest above.
 
           # The section 7 opt-ins must stay commented out.
-          if 'font-family: revert' in stripped:
+          if 'font-family: var(--sn-stylekit-sans-serif-font) !important' in stripped:
               fail('the "system font outside the editor" opt-in block is uncommented')
 
           # Count braces on the stripped source; counting the raw file also

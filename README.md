@@ -116,7 +116,7 @@ One rare mix gets it wrong. In an *English* paragraph, `<=` right after an Arabi
 
 ## Hosting
 
-Pushing to `master` triggers `.github/workflows/pages.yml`, which verifies the theme before publishing — that `ext.json` and `package.json` agree on a version, that every font file exists, that every `@font-face` source is an absolute Pages URL, that all **90** colour declarations still hash to the Lavender Light palette's digest, that some rule applies `--sn-inter-font` app-wide and another applies `--levanta-text-font` to the editor, that code inside the editor stays monospace, that the section 7 opt-ins are still commented out, and that braces balance in the comment-stripped `dist.css`. A failed check blocks the deploy rather than shipping a broken stylesheet.
+Pushing to `master` triggers `.github/workflows/pages.yml`, which verifies the theme before publishing — that `ext.json` and `package.json` agree on a version, that every font file exists, that every `@font-face` source is an absolute Pages URL, that all **90** colour declarations still hash to the Lavender Light palette's digest, that some rule applies `--sn-inter-font` to Standard Notes' own page and no rule reaches into editor plugins' frames, and another applies `--levanta-text-font` to the editor, that code inside the editor stays monospace, that the section 7 opt-ins are still commented out, and that braces balance in the comment-stripped `dist.css`. A failed check blocks the deploy rather than shipping a broken stylesheet.
 
 The digest covers every custom property except the three `--sn-inter-*` and two `--levanta-*` typography knobs, so Levanta Light's colours are proven identical to Lavender Light's.
 
@@ -150,7 +150,7 @@ Inter v4.1 sets the app: sidebar, note list, menus and note titles. The note bod
 Two details make the webfonts work at all:
 
 - **The `@font-face` sources are absolute, not relative.** Standard Notes inlines theme CSS instead of linking it, so a relative `url('fonts/…')` resolves against the app's own origin and 404s. v2.2.0 shipped that bug; the fonts never loaded in any client.
-- **The family is set on elements, not through a variable.** Standard Notes doesn't read `--sn-stylekit-sans-serif-font` for its own chrome, so setting that variable changes nothing. `html, body, body *` is what reaches the UI, and the editor rule in section 4 is more specific, so it wins inside the editor only.
+- **The family is set on elements, not through a variable.** Standard Notes doesn't read `--sn-stylekit-sans-serif-font` for its own chrome, so setting that variable changes nothing. A rule on every element is what reaches the UI, and the editor rule in section 4 is more specific, so it wins inside the editor only. Since v2.8.1 both are scoped to Standard Notes' own page, `:where(body:has(> #app-group-root))`: SN also loads the theme into every editor plugin's frame, and an unscoped `body *` rule replaced the plugins' own fonts with Inter.
 
 Code keeps a monospace face everywhere, and contextual alternates are off there so `->` stays two characters where that matters.
 

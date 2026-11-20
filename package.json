@@ -1,6 +1,6 @@
 {
   "name": "sn-levanta-light-theme",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "main": "dist/dist.css",
   "sn": {
     "main": "dist/dist.css"
