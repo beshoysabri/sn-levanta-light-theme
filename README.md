@@ -51,7 +51,7 @@ What does work is a font installed on the computer. There's no download, so CSP 
 
 - **Windows** — extract the zip, select all the `.ttf` files, right-click → **Install for all users**. Plain **Install** puts the fonts in your user profile only, and it isn't certain the desktop app looks there; "for all users" always works. Then quit Standard Notes completely, including from the icon in the system tray, and open it again: fonts are read at launch.
 - **macOS** — double-click each `.ttf` → **Install** (or drag them into Font Book), then quit Standard Notes with Cmd+Q and reopen it.
-- **Linux** — copy the `.ttf` files to `~/.local/share/fonts`, run `fc-cache -f`, and restart Standard Notes.
+- **Linux** — copy the `.ttf` files to `~/.local/share/fonts`, run `fc-cache -f`, and restart Standard Notes. If Standard Notes came from the Snap Store (Ubuntu's App Center), check this: the Snap only looks in `~/.local/share/fonts` if that folder already existed the first time the Snap ran, and it doesn't check again until the Snap updates. Either install the fonts for every user, `sudo cp *.ttf /usr/local/share/fonts/ && sudo fc-cache -f`, or make the Snap look again with `rm ~/snap/standard-notes/current/.last_revision`; then quit Standard Notes and reopen it.
 
 Install the bold faces too: the theme turns off synthetic bold, so a family with only a Regular shows bold text unbolded. Each font is optional — without Karla the editor falls back to Inter, without Plex Arabic it uses the system's Arabic face, and without Levanta Arrows `->` stays as typed.
 
